@@ -20,7 +20,12 @@ penguins %>%
 penguins %>%
   rename(island_new=island)
 penguins %>%                                --------- all in CAPS
-  rename_with(penguins,toupper)   
+  rename_with(penguins,toupper) 
+  
+                                            --------- organizing
+install.packages("tidyverse")
+library("tidyverse")
 
+penguins %>% arrange(bill_length_mm)
 
  
