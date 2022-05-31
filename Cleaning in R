@@ -1,0 +1,26 @@
+install.packages("here")
+library("here")
+install.packages("skimr")
+library("skimr")
+install.packages("janitor")
+library("janitor")
+install.packages("dplyr")
+library("dplyr")
+install.packages("palmerpenguins")
+library("palmerpenguins")
+                                            --------- scope of the analysis starts
+skim_without_charts(penguins)
+glimpse(penguins)
+head(penguins)
+                                            --------- switch to the R script
+penguins %>%
+  select(species)
+penguins %>%
+  select(-species)
+penguins %>%
+  rename(island_new=island)
+penguins %>%                                --------- all in CAPS
+  rename_with(penguins,toupper)   
+
+
+ 
