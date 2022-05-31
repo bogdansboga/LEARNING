@@ -1,0 +1,13 @@
+> install.packages("tidyverse")   
+
+> library(tidyverse)
+
+> names <- c("bonny", "danny", "gunny", "vanny")
+> age <- c(7, 28, 19, 79)
+> people <- data.frame(names, age)
+
+> head(people)  -- top ten
+
+> mutate(people, age_in_20 = age + 20)    ---- data modification
+
+
