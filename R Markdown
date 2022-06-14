@@ -1,1 +1,49 @@
+install.packages("rmarkdown")
+########RMDFILE########
+
+---
+title: "IDs"
+author: "Bo"
+date: '2022-06-14'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+```{r warning=FALSE}
+install.packages("dplyr")
+library("dplyr")
+install.packages("tidyverse")
+library(tidyverse)
+```
+
+```{r}
+id <- c(1:10)
+```
+
+## Beginning
+```{r}
+name <- c("John Mendes", "Rob Stewart", "Rachel Abrahamson", "Christy Hickman", "Johnson Harper", "Candace Miller", "Carlson Landy", "Pansy Jordan", "Darius Berry", "Claudia Garcia")
+
+job_title <- c("Professional", "Programmer", "Management", "Clerical", "Developer", "Programmer", "Management", "Clerical", "Developer", "Programmer")
+
+```
+```{r}
+employee <- data.frame(id, name, job_title)
+print(employee)
+
+separate(employee, name,into=c('first_name', 'last_name'), sep = ' ')
+```
+
+
+
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r id, echo=FALSE}
+plot(id)
+```
 
