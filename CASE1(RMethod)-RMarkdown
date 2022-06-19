@@ -5,10 +5,10 @@ date: '2022-06-14'
 output: html_document
 ---
 
-```{r install, include=FALSE}
-install.packages("tidyverse")
-install.packages("lubridate")
-install.packages("ggplot2")
+```{r install}
+install.packages("tidyverse", repos = "http://cran.us.r-project.org")
+install.packages("lubridate", repos = "http://cran.us.r-project.org")
+install.packages("ggplot2", repos = "http://cran.us.r-project.org")
 ```
 
 ```{r LIB, include=FALSE}
@@ -24,7 +24,8 @@ q3_2019 <- read_csv("Divvy_Trips_2019_Q3.csv")
 q4_2019 <- read_csv("Divvy_Trips_2019_Q4.csv")
 ```
 
-```{r cons_test, echo=TRUE} #check for a wrong names
+```{r cons_test, echo=TRUE}
+#check for a wrong names
 colnames(q1_2020)
 colnames(q2_2019)
 colnames(q3_2019) 
@@ -90,12 +91,8 @@ all_trips <- all_trips %>%
 ## In the "member_casual" column, replace "Subscriber" with "member" and "Customer" with "casual"
 all_trips <-  all_trips %>% 
   mutate(member_casual = recode(member_casual
-    ,"Subscriber" = "member"
-    ,"Customer" = "casual"))
-```
-
-```{r check, echo=FALSE}
-table(all_trips$member_casual)
+                           ,"Subscriber" = "member"
+                           ,"Customer" = "casual"))
 ```
 
 ```{r extended_dates, include=FALSE}
@@ -143,9 +140,10 @@ aggregate(all_trips_v2$ride_length ~ all_trips_v2$member_casual, FUN = max)
 aggregate(all_trips_v2$ride_length ~ all_trips_v2$member_casual, FUN = min)
 ```
 
-```{r}
+```{r avg_ride, echo=FALSE}
 # See the average ride time by each day for members vs casual users
 aggregate(all_trips_v2$ride_length ~ all_trips_v2$member_casual + all_trips_v2$day_of_week, FUN = mean)
+
 ```
 
 ```{r wdays_fix, include=FALSE}
@@ -156,6 +154,7 @@ all_trips_v2$day_of_week <- ordered(all_trips_v2$day_of_week, levels=c("Sunday",
 ```{r avg_ride_1, echo=FALSE}
 # Now, let's run the average ride time by each day for members vs casual users
 aggregate(all_trips_v2$ride_length ~ all_trips_v2$member_casual + all_trips_v2$day_of_week, FUN = mean)
+
 ```
 
 ```{r analyze_2, echo=FALSE}
@@ -164,9 +163,34 @@ all_trips_v2 %>%
   group_by(member_casual, weekday) %>%  #groups by usertype and weekday
   summarise(number_of_rides = n()			#calculates the number of rides and average duration 
   ,average_duration = mean(ride_length)) %>% 		# calculates the average duration
-  arrange(member_casual, weekday)
-  
+  arrange(member_casual, weekday)	
+```
+
+```{r viz_1, echo=FALSE}
+# Let's visualize the number of rides by rider type
+all_trips_v2 %>% 
+  mutate(weekday = wday(started_at, label = TRUE)) %>% 
+  group_by(member_casual, weekday) %>% 
+  summarise(number_of_rides = n()
+            ,average_duration = mean(ride_length)) %>% 
+  arrange(member_casual, weekday)  %>% 
+  ggplot(aes(x = weekday, y = number_of_rides, fill = member_casual)) +
+  geom_col(position = "dodge")
+```
+
+```{r viz_2, echo=FALSE}
+# Let's create a visualization for average duration
+all_trips_v2 %>% 
+  mutate(weekday = wday(started_at, label = TRUE)) %>% 
+  group_by(member_casual, weekday) %>% 
+  summarise(number_of_rides = n()
+            ,average_duration = mean(ride_length)) %>% 
+  arrange(member_casual, weekday)  %>% 
+  ggplot(aes(x = weekday, y = average_duration, fill = member_casual)) +
+  geom_col(position = "dodge")
+```
+
 ```{r final, include=FALSE}
 counts <- aggregate(all_trips_v2$ride_length ~ all_trips_v2$member_casual + all_trips_v2$day_of_week, FUN = mean)
-write.csv(counts, file = '~/Desktop/bogas_exam/case1/avg_ride_length.csv')
-```  
+write.csv(counts, file = '~/avg_ride_length.csv')
+```
